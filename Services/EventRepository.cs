@@ -12,7 +12,7 @@ namespace Comedy_Events.Services
     {
         private readonly EventContext _eventContext;
         private readonly ILogger<EventRepository> _logger;
-        EventRepository(EventContext context, ILogger<EventRepository> logger)
+        public EventRepository(EventContext context, ILogger<EventRepository> logger)
         {
             _eventContext = context;
             _logger = logger;

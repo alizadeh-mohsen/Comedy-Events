@@ -1,4 +1,5 @@
 using Comedy_Events.Context;
+using Comedy_Events.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,7 @@ namespace Comedy_Events
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<EventContext>();
+            services.AddScoped<IEventRepository, EventRepository>();
             services.AddControllers();
         }
 
