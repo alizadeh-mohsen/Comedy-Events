@@ -1,2 +1,5 @@
 ﻿Add-Migration InitialDatabase
 update-database
+
+AutoMapper.Extensions.Microsoft.DependencyInjection
+Services.addautoMapper();
