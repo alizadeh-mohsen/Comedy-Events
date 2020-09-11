@@ -79,12 +79,12 @@ namespace Comedy_Events.Services
 
         public async Task<Event[]> GetEventsByDate(DateTime date, bool includeGigs = false)
         {
-            _logger.LogInformation($"getting events if date {date}");
+            _logger.LogInformation($"getting events of date {date}");
 
             IQueryable<Event> events = _eventContext.Events.Include(e => e.Venue).Where(e => e.EventDate.Date.Equals(date.Date));
 
             if (includeGigs)
-                events.Include(e => e.Gigs).ThenInclude(g => g.Comedian);
+                events = events.Include(e => e.Gigs).ThenInclude(g => g.Comedian);
 
             return await events.ToArrayAsync();
         }

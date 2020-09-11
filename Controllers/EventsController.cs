@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Comedy_Events.Services;
 using ComedyEvents.Dto;
+using ComedyEvents.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Threading.Tasks;
@@ -14,12 +16,14 @@ namespace Comedy_Events.Controllers
     {
         private readonly IEventRepository _repository;
         private readonly IMapper _mapper;
+        private readonly LinkGenerator _linkGenerator;
 
 
-        public EventsController(IEventRepository repository, IMapper mapper)
+        public EventsController(IEventRepository repository, IMapper mapper, LinkGenerator linkGenerator)
         {
             _repository = repository;
             _mapper = mapper;
+            _linkGenerator = linkGenerator;
         }
 
         [HttpGet]
@@ -55,6 +59,21 @@ namespace Comedy_Events.Controllers
 
             var eventDtos = _mapper.Map<EventDto[]>(events);
             return Ok(eventDtos);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<EventDto>> Post(EventDto dto)
+        {
+            var eventToSave = _mapper.Map<Event>(dto);
+            _repository.Add(eventToSave);
+
+            if (await _repository.Save())
+            {
+                var link = _linkGenerator.GetPathByAction("Get", "Events", new { eventToSave.EventId });
+                dto.EventId = eventToSave.EventId;
+                return Created(link, dto);
+            }
+            return BadRequest();
         }
 
     }
