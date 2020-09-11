@@ -1,3 +1,5 @@
+using AutoMapper;
+using Comedy_Events.AutoMapper;
 using Comedy_Events.Context;
 using Comedy_Events.Services;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +26,11 @@ namespace Comedy_Events
             services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
+            #region AutoMapper
+            var mapperConfig = new MapperConfiguration(m => m.AddProfile(new MappingProfile()));
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            #endregion
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
