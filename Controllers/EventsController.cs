@@ -1,5 +1,6 @@
-﻿using Comedy_Events.Services;
-using ComedyEvents.Models;
+﻿using AutoMapper;
+using Comedy_Events.Services;
+using ComedyEvents.Dto;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -10,17 +11,21 @@ namespace Comedy_Events.Controllers
     public class EventsController : ControllerBase
     {
         private readonly IEventRepository _repository;
+        private readonly IMapper _mapper;
 
-        public EventsController(IEventRepository repository)
+
+        public EventsController(IEventRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<Event[]>> Get(bool includeGigs = false)
+        public async Task<ActionResult<EventDto[]>> Get(bool includeGigs = false)
         {
-            var result = await _repository.GetEvents(includeGigs);
-            return Ok(result);
+            var events = await _repository.GetEvents(includeGigs);
+            var eventDtos = _mapper.Map<EventDto[]>(events);
+            return Ok(eventDtos);
         }
 
         //[HttpGet]
